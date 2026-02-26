@@ -7,16 +7,23 @@ interface Props {
 
 export default function ReportPreview({ data }: Props) {
   const { year, month, file1, file2, file3, file4, file5, file6 } = data;
-  const nextYear = parseInt(year) + 1;
+  const currentMonth = parseInt(month, 10);
+  const currentYear = parseInt(year, 10);
+  const nextMonthNum = currentMonth === 12 ? 1 : currentMonth + 1;
+  const nextYearNum = currentMonth === 12 ? currentYear + 1 : currentYear;
+  const nextMonthStr = String(nextMonthNum).padStart(2, '0');
+  
+  const monthNames = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'];
+  const monthName = monthNames[currentMonth - 1] + '月';
 
   return (
-    <div className="max-w-none text-gray-800">
-      <h1 className="text-center text-2xl font-bold mb-8">十二月香港印尼交易觀測查核報告書</h1>
+    <div className="max-w-none text-gray-800" style={{ fontFamily: '"Microsoft JhengHei", sans-serif' }}>
+      <h1 className="text-center text-2xl font-bold mb-8">{monthName}香港印尼交易觀測查核報告書</h1>
       
       <div className="mb-8 space-y-2 text-gray-700">
         <p><strong>交易資料期間：</strong>{year}年{month}月01日至{year}年{month}月31日</p>
         <p><strong>報告編號：</strong>EUIHKAMLID{year}{month}</p>
-        <p><strong>查核日期：</strong>{nextYear}年01月__日</p>
+        <p><strong>查核日期：</strong>{nextYearNum}年{nextMonthStr}月__日</p>
         <p><strong>查核人員：</strong></p>
       </div>
 
@@ -65,7 +72,7 @@ export default function ReportPreview({ data }: Props) {
       </table>
 
       <h2 className="text-xl font-bold mt-8 mb-4 border-b pb-2">三、查核結果</h2>
-      <p className="text-gray-700 mb-4">12月份香港印尼線各項目查核結果如下：</p>
+      <p className="text-gray-700 mb-4">{currentMonth}月份香港印尼線各項目查核結果如下：</p>
 
       {/* Section 1 */}
       <h3 className="text-lg font-bold mt-6 mb-3">1. 匯款/受款人 Hit 到黑名單</h3>

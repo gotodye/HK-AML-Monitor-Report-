@@ -3,34 +3,53 @@ import { saveAs } from 'file-saver';
 import { ReportData } from './reportParser';
 
 export async function generateDocx(data: ReportData) {
+  const currentMonth = parseInt(data.month, 10);
+  const currentYear = parseInt(data.year, 10);
+  const nextMonthNum = currentMonth === 12 ? 1 : currentMonth + 1;
+  const nextYearNum = currentMonth === 12 ? currentYear + 1 : currentYear;
+  const nextMonthStr = String(nextMonthNum).padStart(2, '0');
+  
+  const monthNames = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'];
+  const monthName = monthNames[currentMonth - 1] + '月';
+
   const doc = new Document({
+    styles: {
+      default: {
+        document: {
+          run: {
+            font: "微軟正黑體",
+            size: 24,
+          },
+        },
+      },
+    },
     sections: [{
       properties: {},
       children: [
         new Paragraph({
-          text: `十二月香港印尼交易觀測查核報告書`,
+          text: `${monthName}香港印尼交易觀測查核報告書`,
           heading: HeadingLevel.HEADING_1,
           alignment: AlignmentType.CENTER,
         }),
         new Paragraph({ text: '' }),
         new Paragraph({
           children: [
-            new TextRun({ text: `交易資料期間：${data.year}年${data.month}月01日至${data.year}年${data.month}月31日`, size: 24 }),
+            new TextRun({ text: `交易資料期間：${data.year}年${data.month}月01日至${data.year}年${data.month}月31日` }),
           ]
         }),
         new Paragraph({
           children: [
-            new TextRun({ text: `報告編號：EUIHKAMLID${data.year}${data.month}`, size: 24 }),
+            new TextRun({ text: `報告編號：EUIHKAMLID${data.year}${data.month}` }),
           ]
         }),
         new Paragraph({
           children: [
-            new TextRun({ text: `查核日期：${parseInt(data.year) + 1}年01月__日`, size: 24 }),
+            new TextRun({ text: `查核日期：${nextYearNum}年${nextMonthStr}月__日` }),
           ]
         }),
         new Paragraph({
           children: [
-            new TextRun({ text: `查核人員：`, size: 24 }),
+            new TextRun({ text: `查核人員：` }),
           ]
         }),
         new Paragraph({ text: '' }),
@@ -56,7 +75,7 @@ export async function generateDocx(data: ReportData) {
           heading: HeadingLevel.HEADING_2,
         }),
         new Paragraph({
-          text: `12月份香港印尼線各項目查核結果如下：`,
+          text: `${currentMonth}月份香港印尼線各項目查核結果如下：`,
         }),
         new Paragraph({
           text: `1. 匯款/受款人 Hit 到黑名單`,
@@ -112,7 +131,7 @@ export async function generateDocx(data: ReportData) {
   });
 
   const blob = await Packer.toBlob(doc);
-  saveAs(blob, `十二月香港印尼交易觀測查核報告書.docx`);
+  saveAs(blob, `${monthName}香港印尼交易觀測查核報告書.docx`);
 }
 
 function createScopeTable() {
