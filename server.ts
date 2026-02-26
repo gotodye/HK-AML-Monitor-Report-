@@ -44,8 +44,11 @@ async function startServer() {
 
   app.get('/auth/callback', async (req, res) => {
     const { code } = req.query;
-    const appUrl = getAppUrl(req);
-    const redirectUri = `${appUrl}/auth/callback`;
+    
+    // Use the host header to reconstruct the exact redirect URI that was used
+    const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+    const host = req.headers['x-forwarded-host'] || req.get('host');
+    const redirectUri = `${protocol}://${host}/auth/callback`;
 
     try {
       const tokenRes = await fetch('https://oauth2.googleapis.com/token', {

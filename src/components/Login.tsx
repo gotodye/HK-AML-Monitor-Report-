@@ -7,7 +7,13 @@ export default function Login({ onLogin }: { onLogin: (user: any) => void }) {
     try {
       const res = await fetch('/api/auth/url');
       const { url } = await res.json();
-      window.open(url, 'oauth_popup', 'width=600,height=700');
+      
+      // Force the redirect_uri to match the current window location to prevent mismatch
+      const currentOrigin = window.location.origin;
+      const urlObj = new URL(url);
+      urlObj.searchParams.set('redirect_uri', `${currentOrigin}/auth/callback`);
+      
+      window.open(urlObj.toString(), 'oauth_popup', 'width=600,height=700');
     } catch (err) {
       setError('無法取得登入網址');
     }
