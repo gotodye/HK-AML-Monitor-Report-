@@ -4,7 +4,9 @@ const app = express();
 
 const HARDCODED_WHITELIST = [
   'laurence0315.lt@gmail.com',
-  'gotodye@gmail.com'
+  'gotodye@gmail.com',
+  'thuyhang8194@gmail.com',
+  'angelanovita6@gmail.com'
 ];
 const ENV_WHITELIST = (process.env.WHITELISTED_EMAILS || '')
   .split(',')
